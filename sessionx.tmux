@@ -64,6 +64,8 @@ handle_binds() {
 
 handle_args() {
 	LS_COMMAND=$(tmux_option_or_fallback "@sessionx-ls-command" "ls")
+	# refresh CURRENT here so it reflects the active session when invoked
+	CURRENT="$(tmux display-message -p '#S')"
 	if [[ "$preview_enabled" == "true" ]]; then
 		PREVIEW_LINE="${SCRIPTS_DIR%/}/preview.sh ${PREVIEW_OPTIONS} {}"
 	fi
@@ -179,3 +181,4 @@ if [ `tmux_option_or_fallback "@sessionx-prefix" "on"` = "on"  ]; then
 else
 	tmux bind-key -n "$(tmux_option_or_fallback "@sessionx-bind" "O")" run-shell "$CURRENT_DIR/scripts/sessionx.sh"
 fi
+
