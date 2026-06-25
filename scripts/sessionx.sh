@@ -101,13 +101,17 @@ handle_output() {
 			target="$mark"
 		elif test -d "$target"; then
 			d_target="$(basename "$target" | tr -d '.')"
-			tmux new-session -d -s "$d_target" -c "$target" -n "opencode"
-			tmux send-keys -t "$d_target:1" "opencode" C-m
-			tmux new-window -t "$d_target" -c "$target" -n "nvim"
-			tmux send-keys -t "$d_target:2" "nvim ." C-m
-			tmux new-window -t "$d_target" -c "$target" -n "shell"
-			tmux select-window -t "$d_target:1"
-			target=$d_target
+			if tmux has-session -t="$d_target" 2>/dev/null; then
+				target=$d_target
+			else
+				tmux new-session -d -s "$d_target" -c "$target" -n "opencode"
+				tmux send-keys -t "$d_target:1" "opencode" C-m
+				tmux new-window -t "$d_target" -c "$target" -n "nvim"
+				tmux send-keys -t "$d_target:2" "nvim ." C-m
+				tmux new-window -t "$d_target" -c "$target" -n "shell"
+				tmux select-window -t "$d_target:1"
+				target=$d_target
+			fi
 		else
 			if [[ "$Z_MODE" == "on" ]]; then
 				z_target=$(zoxide query "$target")
