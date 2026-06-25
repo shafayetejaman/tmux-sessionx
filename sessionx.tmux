@@ -135,11 +135,6 @@ handle_args() {
 		--scrollbar '▌▐'
 	)
 
-	legacy=$(tmux_option_or_fallback "@sessionx-legacy-fzf-support" "off")
-	if [[ "${legacy}" == "off" ]]; then
-		args+=(--border-label "Current session: \"$CURRENT\" ")
-		args+=(--bind 'focus:transform-preview-label:echo [ {} ] | sed "s/\x1b\[[0-9;]*m//g"')
-	fi
 	auto_accept=$(tmux_option_or_fallback "@sessionx-auto-accept" "off")
 	if [[ "${auto_accept}" == "on" ]]; then
 		args+=(--bind one:accept)
@@ -165,6 +160,7 @@ handle_extra_options() {
 	tmux set-option -g @sessionx-_custom-paths-subdirectories "$(tmux_option_or_fallback "@sessionx-custom-paths-subdirectories" "false")"
 	tmux set-option -g @sessionx-_git-branch "$(tmux_option_or_fallback "@sessionx-git-branch" "off")"
 	tmux set-option -g @sessionx-_fzf-builtin-tmux "$FZF_BUILTIN_TMUX"
+	tmux set-option -g @sessionx-_legacy-fzf-support "$(tmux_option_or_fallback "@sessionx-legacy-fzf-support" "off")"
 }
 
 preview_settings

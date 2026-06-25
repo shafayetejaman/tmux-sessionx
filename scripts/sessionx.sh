@@ -144,6 +144,12 @@ run_plugin() {
 	handle_input
 	args+=(--bind "$BACK")
 
+	legacy=$(tmux show-option -gqv @sessionx-_legacy-fzf-support)
+	if [[ "$legacy" == "off" ]]; then
+		args+=(--border-label "Current session: \"$CURRENT\" ")
+		args+=(--bind 'focus:transform-preview-label:echo [ {} ] | sed "s/\x1b\[[0-9;]*m//g"')
+	fi
+
 	git_branch_mode=$(tmux show-option -gqv @sessionx-_git-branch)
 	if [[ "$git_branch_mode" == "on" ]]; then
 		FZF_LISTEN_PORT=$((RANDOM % 10000 + 20000))
